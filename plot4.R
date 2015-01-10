@@ -12,19 +12,22 @@ subdata$datetime <- as.POSIXct(paste(subdata$Date, subdata$Time), format="%d/%m/
 # use .png file as output device
 png(filename = "plot4.png", width=480, height=480, units="px")
 
-# build a histogram
+# prepare frame
 par(mfrow = c(2, 2))
 
 with(subdata,{
   
+  # chart #1
   plot(x = datetime, y = Global_active_power, 
        xlab = "",
        ylab = "Global Active Power",
        type="l")
   
+  # chart #2
   plot(x = datetime, y = Voltage, 
        type="l")
   
+  # chart #3
   plot(x = datetime, y = Sub_metering_1, 
        xlab = "",
        ylab = "Energy sub metering",
@@ -43,6 +46,7 @@ with(subdata,{
          col=c("black", "red", "blue"), 
          lty=1, bty="n")
   
+  # chart #4
   plot(x = datetime, y = Global_reactive_power, 
        type="l")
   
