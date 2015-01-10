@@ -1,15 +1,15 @@
+# Use English locale
+Sys.setlocale("LC_TIME", "English")
+
 # load all data from file
 data <- read.csv(file = "household_power_consumption.txt", 
-                 sep = ";", header = TRUE, na.strings = c("?"))
+                 sep = ";", header = TRUE, na.strings = "?")
 
 # get subset data, for particular date
 subdata <- data[data$Date == "1/2/2007" | data$Date == "2/2/2007", ]
 
 # use .png file as output device
 png(filename = "plot1.png", width=480, height=480, units="px")
-
-# i want lesser axis labels
-par(cex = 0.75)
 
 # build a histogram
 hist(subdata$Global_active_power, 
