@@ -1,21 +1,43 @@
 # Use English locale
 Sys.setlocale("LC_TIME", "English")
 
-# load all data from file
-data <- read.csv(file = "household_power_consumption.txt", 
-                 sep = ";", header = TRUE, na.strings = c("?"))
+zipFileName <- "dataset.zip"
+dataFileName <- "dataset.data"
 
-# get subset data, for particular date
-subdata <- data[data$Date == "1/2/2007" | data$Date == "2/2/2007", ]
-subdata$datetime <- as.POSIXct(paste(subdata$Date, subdata$Time), format="%d/%m/%Y %H:%M:%S") 
+if(file.exists(dataFileName)){
+  cat("Found cached dataset.\n")
+  load(dataFileName)
+} else {
+  cat("Downloading file... Please, wait\n")
+  download.file(
+    url = "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip", 
+    destfile = zipFileName)
+  
+  cat("Unzipping\n")
+  unzip(zipFileName)
+  
+  cat("Loading data from file\n")
+  data <- read.table(file = "household_power_consumption.txt", 
+                     sep = ";", header = TRUE, na.strings = "?")
+  
+  # get subset data, for particular date
+  data <- data[data$Date == "1/2/2007" | data$Date == "2/2/2007", ]
+  
+  # combine Date and Time colunms together
+  data$datetime <- as.POSIXct(paste(data$Date, data$Time), format="%d/%m/%Y %H:%M:%S")
+  
+  cat("Saving cache\n")
+  save(file = dataFileName, data)
+}
 
 # use .png file as output device
 png(filename = "plot4.png", width=480, height=480, units="px")
 
+cat("Building charts. File: plot4.png\n")
 # prepare frame
 par(mfrow = c(2, 2))
 
-with(subdata,{
+with(data,{
   
   # chart #1
   plot(x = datetime, y = Global_active_power, 
